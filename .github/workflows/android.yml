@@ -23,11 +23,20 @@ jobs:
       - name: Grant execute permission for Gradle
         run: chmod +x gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
+      - name: Clean project
+        run: ./gradlew clean
+
+      - name: Build Debug APK
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Verify APK exists
+        run: |
+          ls -lh app/build/outputs/apk/debug/
+          file app/build/outputs/apk/debug/*.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: BattleGrounds-GFX-APK
-          path: app/build/outputs/apk/release/*.apk
+          name: BattleGrounds-GFX-Debug-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
